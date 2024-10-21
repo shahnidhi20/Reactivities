@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import {
   CardMeta,
@@ -13,16 +13,25 @@ import {
 
 import { useStore } from "../../../app/stores/store";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
+import { observer } from "mobx-react-lite";
+import { Link, useParams } from "react-router-dom";
 
-export default function ActivityDetails() {
+export default observer(function ActivityDetails() {
   const { activityStore } = useStore();
 
   const {
     selectedActivity: activity,
-    openFomr,
-    cancelSelectedActivity,
+    loadActivity,
+    loadingInitial,
   } = activityStore;
-  if (!activity) return <LoadingComponent />;
+
+  const { id } = useParams();
+
+  useEffect(() => {
+    if (id) loadActivity(id);
+  }, [id, loadActivity]);
+
+  if (loadingInitial || !activity) return <LoadingComponent />;
 
   return (
     <Card fluid>
@@ -37,13 +46,15 @@ export default function ActivityDetails() {
       <CardContent extra>
         <ButtonGroup widths="2">
           <Button
-            onClick={() => openFomr(activity.id)}
+            as={Link}
+            to={`/manage/${activity.id}`}
             basic
             color="blue"
             content="Edit"
           ></Button>
           <Button
-            onClick={cancelSelectedActivity}
+            as={Link}
+            to={`/activities`}
             basic
             color="grey"
             content="Cancel"
@@ -52,4 +63,4 @@ export default function ActivityDetails() {
       </CardContent>
     </Card>
   );
-}
+});
