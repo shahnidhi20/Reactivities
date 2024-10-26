@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using MediatR;
 using Application.Activities;
 using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
